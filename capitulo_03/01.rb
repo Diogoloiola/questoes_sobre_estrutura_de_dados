@@ -72,16 +72,51 @@ def random_products(list)
   end
 end
 
-list = LinkedList.new
+def options
+  puts '1 - Random products'
+  puts '2 - I/O products'
+end
 
-random_products(list)
+def fetch_choice
+  loop do
+    options
+    choice = gets.chomp.to_i
 
-puts 'How much discount do you want to apply?'
+    return choice if [1, 2].include?(choice)
+  end
+end
 
-discount = gets.chomp.to_i
+def fetch_products
+  loop do
+    puts 'Enter the code, price and quantity'
+    code, price, quantity = gets.split.map(&:to_f)
 
-list.apply_discount(discount)
+    return Product.new(code, price, quantity) if [code, price, quantity].all? { |e| !e.nil? }
+  end
+end
 
-puts 'Print report'
+def menu
+  list = LinkedList.new
 
-list.report
+  choice = fetch_choice
+
+  if choice == 1
+    random_products(list)
+  else
+    5.times do
+      list.add_product fetch_products
+    end
+  end
+
+  puts 'How much discount do you want to apply?'
+
+  discount = gets.chomp.to_i
+
+  list.apply_discount(discount)
+
+  puts 'Print report'
+
+  list.report
+end
+
+menu

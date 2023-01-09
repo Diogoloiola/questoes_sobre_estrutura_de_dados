@@ -1,5 +1,4 @@
 require 'faker'
-
 class Functionary
   attr_accessor :name, :salary
 
@@ -10,6 +9,22 @@ class Functionary
 
   def to_s
     "Name #{name} with salary #{salary}"
+  end
+
+  def self.validate_name(name)
+    return false if name.nil?
+    return false if name.empty?
+    return false if name.size <= 1
+
+    true
+  end
+
+  def self.validate_salary(salary)
+    return false if salary.nil?
+    return false if salary.empty?
+    return false if salary.size <= 1
+
+    true
   end
 end
 
@@ -57,14 +72,14 @@ class LinkedList
   end
 
   def fetch_highest_salary
-    functionary = @list
+    functionary = @list.functionary
 
     aux = @list
 
     while aux
-      functionary = aux.functionary if aux.functionary.salary > functionary.functionary.salary
+      functionary = aux.functionary if aux.functionary.salary > functionary.salary
 
-      return self.print if aux.functionary.salary == functionary.functionary.salary
+      return self.print if functionary.salary == aux.functionary.salary && (aux.functionary != functionary)
 
       aux = aux.next_element
     end
@@ -78,6 +93,7 @@ class LinkedList
     while aux
       sum += aux.functionary.salary
       aux = aux.next_element
+      count += 1
     end
     sum / count
   end
@@ -134,9 +150,9 @@ end
 def fetch_functionary
   loop do
     puts 'Enter with name and salary'
-    name, salary = gets.split.map(&:to_f)
+    name, salary = gets.split
 
-    return Functionary.new(name, salary) if [name, salary].all? { |e| !e.nil? }
+    return Functionary.new(name, salary.to_f) if Functionary.validate_name(name) && Functionary.validate_salary(salary)
   end
 end
 
@@ -146,6 +162,7 @@ def menu
   choice = fetch_choice
 
   if choice == 1
+    puts 'Generating...'
     random_functionary(list)
   else
     8.times do
@@ -153,10 +170,8 @@ def menu
     end
   end
 
-  second_options
-
   loop do
-    options
+    second_options
     choice = gets.chomp.to_i
 
     case choice
@@ -174,8 +189,12 @@ def menu
       else
         puts "Result #{response}"
       end
+    when 0
+      break
     else
       puts 'Invalid option'
     end
   end
 end
+
+menu

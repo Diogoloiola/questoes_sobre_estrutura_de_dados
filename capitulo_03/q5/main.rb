@@ -1,4 +1,5 @@
 require_relative 'linked_list'
+require_relative 'double_linked_list'
 
 def main_menu
   puts '1 - Random values'
@@ -44,6 +45,8 @@ def main
   list_one = LinkedList.new
   list_two = LinkedList.new
 
+  double_linked_list = DoubleLinkedList.new
+
   case choice
   when 1
     define_random_values(list_one, list_two)
@@ -60,9 +63,12 @@ def main
     puts 'Bye'
   end
 
-  list_one.print_list
-  puts '=================='
-  list_two.print_list
+  return unless [1, 2].include?(choice)
+
+  list_one.list_to(double_linked_list)
+  list_two.list_to(double_linked_list)
+
+  double_linked_list.print_list
 end
 
 main
